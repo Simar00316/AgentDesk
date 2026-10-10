@@ -587,15 +587,6 @@ export function KnowledgeStep({ config, update }: StepProps) {
                     />{" "}
                     Show citations
                   </label>
-                  <label className="flex items-center gap-2 text-sm">
-                    <Switch
-                      checked={rag.mmr}
-                      onCheckedChange={(v) =>
-                        update((c) => ({ ...c, tools: { ...c.tools, rag: { ...c.tools.rag, mmr: v } } }))
-                      }
-                    />{" "}
-                    MMR diversification
-                  </label>
                 </div>
               </div>
               <p className="mt-3 text-xs text-muted-foreground">

@@ -51,7 +51,6 @@ export interface AgentConfig {
       rerank: { enabled: boolean; provider: "cohere" | "local" | null; candidates: number };
       query_rewrite: boolean;
       citations: boolean;
-      mmr: boolean;
     };
     sql: {
       enabled: boolean;

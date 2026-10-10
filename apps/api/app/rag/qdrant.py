@@ -111,6 +111,26 @@ async def delete_document_points(
     )
 
 
+async def delete_stale_points(
+    collection: str, org_id: str, document_id: str, version: int, keep: int
+) -> None:
+    """A re-index at the same version overwrites points 0..keep-1 by id; drop any left over beyond that."""
+    await get_qdrant().delete(
+        collection_name=collection,
+        points_selector=qm.FilterSelector(
+            filter=_tenant_filter(
+                org_id,
+                document_id=document_id,
+                extra=[
+                    qm.FieldCondition(key="document_version", match=qm.MatchValue(value=version)),
+                    qm.FieldCondition(key="chunk_index", range=qm.Range(gte=keep)),
+                ],
+            )
+        ),
+        wait=True,
+    )
+
+
 async def delete_kb_points(collection: str, org_id: str, kb_id: str) -> None:
     c = get_qdrant()
     if not await c.collection_exists(collection):
@@ -153,6 +173,7 @@ class Hit:
     payload: dict[str, Any]
     score: float  # dense cosine similarity
     fused_score: float
+    vector: list[float] | None = None
 
 
 async def search(
@@ -219,7 +240,13 @@ async def search(
         if mode != "sparse" and cos < threshold:
             continue  # dense-similarity threshold decides "relevant" (PRD §10.4)
         hits.append(
-            Hit(id=str(p.id), payload=dict(p.payload or {}), score=round(cos, 4), fused_score=float(p.score))
+            Hit(
+                id=str(p.id),
+                payload=dict(p.payload or {}),
+                score=round(cos, 4),
+                fused_score=float(p.score),
+                vector=vec,
+            )
         )
     return hits
 

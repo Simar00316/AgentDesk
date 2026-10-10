@@ -22,7 +22,7 @@ from sqlalchemy import (
     Uuid,
     func,
 )
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import ARRAY, JSONB, REAL
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base, OrgScopedMixin, PKMixin, SoftDeleteMixin, TimestampMixin
@@ -243,6 +243,24 @@ class Document(PKMixin, TimestampMixin, OrgScopedMixin, SoftDeleteMixin, Base):
     chunk_count: Mapped[int] = mapped_column(Integer, default=0)
     parse_strategy: Mapped[str] = mapped_column(String(20), default="auto")
     ingested_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class DocumentChunk(PKMixin, OrgScopedMixin, Base):
+    """Full-text chunks of hierarchically indexed (large) documents. Qdrant holds their page summaries;
+    retrieval expands the chosen summaries back to these chunks by page range."""
+
+    __tablename__ = "document_chunks"
+    __table_args__ = (Index("ix_document_chunks_doc_pages", "document_id", "document_version", "page_start"),)
+    document_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("documents.id", ondelete="CASCADE"))
+    kb_id: Mapped[uuid.UUID] = mapped_column(Uuid)
+    document_version: Mapped[int] = mapped_column(Integer)
+    chunk_index: Mapped[int] = mapped_column(Integer)
+    page_start: Mapped[int | None] = mapped_column(Integer)
+    page_end: Mapped[int | None] = mapped_column(Integer)
+    section_title: Mapped[str | None] = mapped_column(Text)
+    element_types: Mapped[list[str]] = mapped_column(JSONB, default=list)
+    text: Mapped[str] = mapped_column(Text)
+    embedding: Mapped[list[float]] = mapped_column(ARRAY(REAL))  # dense vector, for stage-2 ranking
 
 
 class IngestionJob(PKMixin, TimestampMixin, OrgScopedMixin, Base):

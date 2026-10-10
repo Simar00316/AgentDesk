@@ -1,22 +1,27 @@
 """Layout-aware parsing into Unstructured elements (PRD §10.2).
 
-DOCX / TXT / MD use Unstructured's partitioners. PDF uses pdfminer directly: Unstructured's own
-partition_pdf hard-imports the torch-based inference stack (2+ GB), which is out of scope for this
-deployment footprint. Titles are detected from font size, page numbers are kept, headers/footers
-are dropped by position.
+DOCX / TXT / MD use Unstructured's partitioners. PDF uses Unstructured's hi_res strategy when the layout
+stack is installed (`uv sync --extra layout` plus poppler and tesseract; the worker image ships it): a
+layout model finds titles, text, tables (structure inferred to HTML) and pictures (charts, diagrams,
+photos, extracted as base64 for captioning). Without it, PDFs fall back to pdfminer: titles from font
+size, a table heuristic, no images. Page numbers are kept and headers/footers dropped either way.
 """
 
 from __future__ import annotations
 
+import functools
 import io
+import shutil
 import statistics
 from dataclasses import dataclass
 
+import structlog
 from unstructured.documents.elements import (
     Element,
     ElementMetadata,
     Footer,
     Header,
+    Image,
     NarrativeText,
     PageBreak,
     Table,
@@ -25,6 +30,7 @@ from unstructured.documents.elements import (
 )
 
 DROP_TYPES = (Header, Footer, PageBreak)
+log = structlog.get_logger()
 
 
 @dataclass
@@ -34,7 +40,40 @@ class ParsedDocument:
 
 
 def _clean(elements: list[Element]) -> list[Element]:
-    return [e for e in elements if not isinstance(e, DROP_TYPES) and (e.text or "").strip()]
+    return [
+        e
+        for e in elements
+        if not isinstance(e, DROP_TYPES)
+        and ((e.text or "").strip() or (isinstance(e, Image) and e.metadata.image_base64))
+    ]
+
+
+@functools.cache
+def hi_res_available() -> bool:
+    try:
+        import unstructured_inference  # noqa: F401
+    except ImportError:
+        return False
+    return bool(shutil.which("pdftoppm") and shutil.which("tesseract"))
+
+
+def _pdf_page_count(data: bytes) -> int | None:
+    from pdfminer.pdfpage import PDFPage
+
+    return sum(1 for _ in PDFPage.get_pages(io.BytesIO(data))) or None
+
+
+def parse_pdf_hi_res(data: bytes, strategy: str = "hi_res") -> ParsedDocument:
+    from unstructured.partition.pdf import partition_pdf
+
+    els = partition_pdf(
+        file=io.BytesIO(data),
+        strategy=strategy,
+        infer_table_structure=True,  # Table.metadata.text_as_html
+        extract_image_block_types=["Image"],  # pictures, charts, diagrams -> metadata.image_base64
+        extract_image_block_to_payload=True,
+    )
+    return ParsedDocument(elements=_clean(list(els)), page_count=_pdf_page_count(data))
 
 
 def parse_pdf(data: bytes, strategy: str = "auto") -> ParsedDocument:
@@ -117,6 +156,12 @@ def parse_markdown(data: bytes) -> ParsedDocument:
 
 def parse_bytes(data: bytes, mime_type: str, strategy: str = "auto") -> ParsedDocument:
     if mime_type == "application/pdf":
+        if strategy != "fast" and hi_res_available():
+            return parse_pdf_hi_res(data, "ocr_only" if strategy == "ocr_only" else "hi_res")
+        if strategy != "fast":
+            log.warning(
+                "layout_parser_unavailable", hint="uv sync --extra layout; install poppler and tesseract"
+            )
         return parse_pdf(data, strategy)
     if mime_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
         return parse_docx(data)
@@ -127,4 +172,4 @@ def parse_bytes(data: bytes, mime_type: str, strategy: str = "auto") -> ParsedDo
     raise ValueError(f"Unsupported file type: {mime_type}")
 
 
-__all__ = ["Element", "ParsedDocument", "Table", "Text", "Title", "parse_bytes"]
+__all__ = ["Element", "Image", "ParsedDocument", "Table", "Text", "Title", "hi_res_available", "parse_bytes"]

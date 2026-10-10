@@ -36,7 +36,14 @@ One compiled LangGraph handles 0, 1 or many tools:
 
 ## Knowledge base (`app/rag`)
 
-Presigned PUT to S3 → magic-byte validation → parse (pdfminer for PDF with title/table heuristics and page numbers; Unstructured for DOCX/MD/TXT) → `chunk_by_title` (1,500/1,200/200/300 defaults) → contextual header → dense (FastEmbed local or provider via LiteLLM, Redis-cached) + BM25 sparse → Qdrant upsert with tenant payload indexes (`org_id` is_tenant, `kb_id`, `document_id`). Retrieval is hybrid RRF with a dense-cosine threshold deciding relevance; optional Cohere/local reranking.
+Presigned PUT to S3 → magic-byte validation → parse → caption pictures → `chunk_by_title` (1,500/1,200/200/300 defaults) → contextual header → index.
+
+- **Parsing.** PDFs use open-source Unstructured `hi_res` when the `layout` extra plus poppler and tesseract are installed (the worker image ships them): a layout model finds titles, text, tables (structure inferred to HTML) and pictures. Without it, pdfminer with title/table heuristics. DOCX/MD/TXT use Unstructured's partitioners. Page numbers are kept throughout.
+- **Pictures.** Each extracted picture (≥ ~4.5 KB, at most 60 per document) is captioned by the utility model (vision) as chart / diagram / photo with a title and summary. Logos and decorative images are dropped; captions become searchable text.
+- **Flat index (≤ 30 pages).** Chunks are embedded (dense, Redis-cached + BM25 sparse) into Qdrant.
+- **Hierarchical index (31+ pages).** Pages are grouped (1 page per entry up to 40 pages, then 2/3/4 so a document has ~40 entries). The utility model writes one JSON index entry per group (title, summary, questions it answers, topics, tables, images, graphs), which is embedded into Qdrant with its page range. The full-text chunks and their dense vectors go to the Postgres `document_chunks` table.
+
+Retrieval (`retrieval.py`, `select.py`) is two-stage. Stage 1: hybrid RRF search (dense-cosine threshold decides relevance). The candidates are the relevance top-n plus MMR picks from a larger pool, all scaled by the total pages in the attached KBs. JEV scores the candidates (one Score question per passage, shared state) and the top 5 are kept. Stage 2: chosen page summaries expand to their pages' chunks from Postgres, which are ranked by cosine + MMR. JEV scores them again and the top 5 scoring at least 0.5/3 go to the LLM. Without `JEV_API_KEY`, the optional Cohere/local reranker or retrieval order selects instead. Tenant filters: Qdrant payload indexes (`org_id` is_tenant, `kb_id`, `document_id`) and `org_id` on every Postgres chunk query.
 
 ## Datasets (`app/sql`)
 
