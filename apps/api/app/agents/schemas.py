@@ -24,7 +24,6 @@ class RagCfg(BaseModel):
     rerank: RerankCfg = Field(default_factory=RerankCfg)
     query_rewrite: bool = True
     citations: bool = True
-    mmr: bool = False
 
 
 class SqlCfg(BaseModel):

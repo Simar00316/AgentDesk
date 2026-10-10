@@ -26,3 +26,6 @@ infra/compose/volumes/
 *.log
 playwright-report/
 test-results/
+
+# downloaded eval PDFs (tests/evals/datasets/rag_pdfs.yaml)
+apps/api/tests/evals/rag_docs/

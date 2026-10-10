@@ -109,8 +109,8 @@ async def _embed_uncached(texts: list[str], model: str, api_key: str | None) -> 
 
         return await asyncio.to_thread(_run)
     vectors: list[list[float]] = []
-    for i in range(0, len(texts), 64):
-        chunk = texts[i : i + 64]
+    for i in range(0, len(texts), 32):  # TEI's default --max-client-batch-size is 32
+        chunk = texts[i : i + 32]
         for attempt in range(3):
             try:
                 resp = await litellm.aembedding(

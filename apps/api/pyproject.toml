@@ -44,6 +44,11 @@ dependencies = [
   "charset-normalizer>=3.5",
 ]
 
+[project.optional-dependencies]
+# Layout-aware PDF parsing (Unstructured hi_res: layout model, table structure, picture extraction).
+# Also needs poppler and tesseract on the PATH; the worker image installs all three.
+layout = ["unstructured[pdf]>=0.27", "torch", "torchvision"]
+
 [dependency-groups]
 dev = [
   "pytest>=9",
@@ -53,9 +58,23 @@ dev = [
   "mypy>=1.19",
   "types-PyYAML",
 ]
+evals = [
+    "langchain-openai>=1.7.0",
+    "ragas>=0.4.3",
+]
 
 [tool.uv]
 package = false
+
+[tool.uv.sources]
+# the layout extra needs torch; CPU wheels avoid ~2.5 GB of CUDA libs
+torch = [{ index = "pytorch-cpu" }]
+torchvision = [{ index = "pytorch-cpu" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

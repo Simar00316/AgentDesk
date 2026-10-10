@@ -1,0 +1,163 @@
+# RAGAS eval over two real, large PDFs (see tests/evals/test_rag_ragas.py).
+# Reference answers were written by hand from the PDFs; `page` is where the answer lives (1-based PDF page).
+documents:
+  - file: llama2_arxiv_2307.09288.pdf
+    url: https://arxiv.org/pdf/2307.09288v2
+  - file: wvsu_employee_handbook_2024.pdf
+    url: https://wvstateu.edu/wp-content/uploads/2024/10/WVSU-Employee-Handbook-2024.pdf
+
+cases:
+  # ---------------------------------------------------------------- Llama 2 (arXiv 2307.09288, 77 pages)
+  - question: How many tokens of data was Llama 2 pretrained on?
+    reference: Llama 2 was pretrained on 2 trillion (2.0T) tokens of data.
+    doc: llama2
+    page: 5
+  - question: What context length does Llama 2 use, and how does it compare with Llama 1?
+    reference: Llama 2 doubles the context length to 4096 tokens (4k), compared with 2048 tokens (2k) for Llama 1.
+    doc: llama2
+    page: 6
+  - question: Which Llama 2 model sizes use grouped-query attention?
+    reference: The bigger models, 34B and 70B, use grouped-query attention (GQA) for improved inference scalability.
+    doc: llama2
+    page: 6
+  - question: What peak learning rate was used to pretrain Llama 2 70B?
+    reference: According to Table 1, Llama 2 70B (like 34B) was trained with a learning rate of 1.5 × 10^-4; the 7B and 13B models used 3.0 × 10^-4.
+    doc: llama2
+    page: 6
+    kind: table
+  - question: How many GPU hours did pretraining the 70B Llama 2 model take, and how much carbon did it emit?
+    reference: Table 2 lists 1,720,320 GPU hours for Llama 2 70B with 291.42 tCO2eq emitted.
+    doc: llama2
+    page: 7
+    kind: table
+  - question: What were the total carbon emissions for pretraining the Llama 2 family, and were they offset?
+    reference: Total emissions were 539 tCO2eq over about 3.3M (3,311,616) GPU hours, and 100% were directly offset by Meta's sustainability program.
+    doc: llama2
+    page: 7
+    kind: table
+  - question: Which optimizer and hyperparameters were used for Llama 2 pretraining?
+    reference: AdamW with beta1 = 0.9, beta2 = 0.95, eps = 1e-5; a cosine learning-rate schedule with 2000 warmup steps decaying to 10% of the peak learning rate; weight decay 0.1 and gradient clipping 1.0.
+    doc: llama2
+    page: 5
+  - question: What tokenizer does Llama 2 use and what is its vocabulary size?
+    reference: The same tokenizer as Llama 1, a byte-pair encoding (BPE) tokenizer using SentencePiece, with a 32k-token vocabulary; numbers are split into individual digits.
+    doc: llama2
+    page: 6
+  - question: What hardware and interconnects were used to pretrain Llama 2?
+    reference: NVIDIA A100 GPUs on Meta's Research Super Cluster (RSC), which uses NVIDIA Quantum InfiniBand, and internal production clusters using RoCE over commodity Ethernet; both interconnect 200 Gbps endpoints, and the power cap is 400W on RSC versus 350W on production.
+    doc: llama2
+    page: 6
+  - question: How many supervised fine-tuning annotations were collected for Llama 2-Chat?
+    reference: They stopped annotating SFT data after collecting a total of 27,540 annotations.
+    doc: llama2
+    page: 9
+  - question: What hyperparameters were used for supervised fine-tuning of Llama 2-Chat?
+    reference: A cosine learning-rate schedule with an initial learning rate of 2 × 10^-5, weight decay 0.1, batch size 64 and sequence length 4096 tokens.
+    doc: llama2
+    page: 9
+  - question: How many human preference comparisons did Meta collect for reward modeling?
+    reference: Meta collected 1,418,091 binary comparisons (Meta Safety & Helpfulness); with open-source data the total is 2,919,326 (Table 6).
+    doc: llama2
+    page: 11
+    kind: table
+  - question: Which model was rejection sampling performed with, and how did smaller models benefit?
+    reference: Rejection sampling was performed only with the largest 70B Llama 2-Chat; smaller models were fine-tuned on rejection-sampled data from the larger model, distilling its capabilities.
+    doc: llama2
+    page: 14
+  - question: What PPO hyperparameters were used for RLHF?
+    reference: AdamW (beta1 0.9, beta2 0.95, eps 1e-5), weight decay 0.1, gradient clipping 1.0, constant learning rate 1e-6, batch size 512, PPO clip threshold 0.2, mini-batch size 64, KL penalty beta 0.01 for 7B/13B and 0.005 for 34B/70B.
+    doc: llama2
+    page: 15
+  - question: What is Ghost Attention (GAtt) and how does it work?
+    reference: GAtt is a method inspired by Context Distillation that helps the model respect an instruction across multiple dialogue turns. An instruction is concatenated to all user messages of a synthetic dialogue, the latest RLHF model samples responses, the instruction is then kept only in the first turn, and the loss is set to 0 for tokens from previous turns.
+    doc: llama2
+    page: 16
+  - question: What TruthfulQA and ToxiGen scores did the pretrained Llama 2 70B model get?
+    reference: In Table 11, pretrained Llama 2 70B scores 50.18 on TruthfulQA (truthful and informative) and 24.60 on ToxiGen (percentage of toxic generations).
+    doc: llama2
+    page: 23
+    kind: table
+
+  # ---------------------------------------------------------------- WVSU employee handbook (82 pages)
+  - question: How long is the probationary period for new employees at WVSU?
+    reference: New employees participate in a three-month and six-month probationary period; under special circumstances it can be extended to a maximum of 12 months.
+    doc: wvsu
+    page: 17
+  - question: Who must approve an extension of the probationary period and what must the supervisor include?
+    reference: Extensions must be made in writing with the consultation and concurrence of the institutional President or designee, and the supervisor's request must include a planned program outlining specific goals and objectives over a specific time period.
+    doc: wvsu
+    page: 17
+  - question: When does a new employee have to complete Form I-9?
+    reference: The employee's portion of Form I-9 must be completed in person on or before the first day of work; acceptable documentation must be presented then or within three days of the first day of employment.
+    doc: wvsu
+    page: 17
+  - question: Where do new employees get their WVSU identification card?
+    reference: From the Public Safety Department, Room 120 of Ferrell Hall.
+    doc: wvsu
+    page: 17
+  - question: How many days of annual leave does a classified employee with 7 years of service earn?
+    reference: Five to 10 years of service (61-120 months) earns 1.50 days per month, which is 18 days per year.
+    doc: wvsu
+    page: 28
+  - question: What is the workweek at WVSU and when is overtime paid at time and a half?
+    reference: The workweek is 37.5 hours. Nonexempt employees are paid 1.5 times their hourly rate for hours over 40 in the workweek; hours between 37.5 and 40 are paid at straight time.
+    doc: wvsu
+    page: 26
+  - question: How many compensatory hours can an employee accrue and how soon must they be used?
+    reference: An employee may accrue no more than 37.5 compensatory hours, and compensatory time off must be used within 60 calendar days from the date it is earned.
+    doc: wvsu
+    page: 27
+  - question: At what rate do full-time employees accumulate sick leave?
+    reference: Full-time employees accumulate sick leave at 1.5 days for every employment month or major fraction thereof.
+    doc: wvsu
+    page: 30
+  - question: Who is eligible for FMLA leave and how much leave does it provide?
+    reference: FMLA provides up to 12 weeks of job-protected leave per year; to be eligible you must have worked at least 12 months and at least 1,250 hours over the past 12 months. At WVSU FMLA may be paid or unpaid depending on leave accruals.
+    doc: wvsu
+    page: 32
+  - question: How much basic life insurance do employees get and who pays for it?
+    reference: Term life insurance of $10,000, with the premium paid by the University.
+    doc: wvsu
+    page: 47
+  - question: How much do employees and WVSU contribute to retirement?
+    reference: Benefit employees must join the TIAA/CREF or Educator's Money plan; the employee contributes 6 percent of gross salary and WVSU contributes 6 percent.
+    doc: wvsu
+    page: 46
+  - question: How much notice should an employee give when resigning?
+    reference: Two weeks' notice in writing for nonexempt employees and 30 days' notice for exempt employees.
+    doc: wvsu
+    page: 19
+  - question: Which paid holidays does WVSU recognize?
+    reference: July 4, Labor Day, Thanksgiving, the day after Thanksgiving, Christmas, the day after Christmas and New Year's Day, plus six assignable holidays listed in the annual holiday memorandum.
+    doc: wvsu
+    page: 50
+  - question: How quickly must a work-related injury be reported?
+    reference: Every accident or injury must be reported to the supervisor within 24 hours, and also to the Department of Public Safety within 24 hours.
+    doc: wvsu
+    page: 51
+  - question: What happens if an employee does not report to work for several days without contacting their supervisor?
+    reference: Failing to report or contact the supervisor for three consecutive workdays is job abandonment; the employee is terminated and is ineligible for rehire.
+    doc: wvsu
+    page: 19
+  - question: What does the Employee Assistance Resource Service (EARS) offer?
+    reference: Assessment, counseling and referral with 3-8 sessions, free to the employee and in-household family members, confidential; phone (304) 722-9119 or (800) 823-6029.
+    doc: wvsu
+    page: 49
+  - question: Can staff take classes at WVSU, and what are the conditions?
+    reference: Tuition and registration fee waivers are available to non-faculty employees employed 12 months or more, first come first served; staff may take at most one class (up to 3 credit hours per semester) during working hours with supervisor approval.
+    doc: wvsu
+    page: 52
+  - question: How much paid military leave can an employee take?
+    reference: Up to 30 calendar days in any one calendar year without loss of pay, status or efficiency rating.
+    doc: wvsu
+    page: 29
+
+  # ---------------------------------------------------------------- not in the documents
+  - question: How much does an employee parking permit cost at WVSU?
+    reference: The handbook says employees must buy parking permit decals from the Department of Public Safety but does not state the price.
+    doc: wvsu
+    expected_no_answer: true
+  - question: What is the API price per million tokens for Llama 2-Chat?
+    reference: The paper does not give any API pricing.
+    doc: llama2
+    expected_no_answer: true

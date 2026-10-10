@@ -250,6 +250,7 @@ async def rag_retrieve(state: AgentState, config: RunnableConfig) -> dict[str, A
     emit("tool_start", {"tool": "rag", "query": query})
     from app.db.session import get_sessionmaker
 
+    select_usage: list[dict[str, Any]] = []
     try:
         async with get_sessionmaker()() as session:
             chunks = await retrieve(
@@ -262,6 +263,7 @@ async def rag_retrieve(state: AgentState, config: RunnableConfig) -> dict[str, A
                 mode=rag.search_mode,
                 rerank=rag.rerank.model_dump(),
                 rerank_api_key=ctx.rerank_key,
+                usage=select_usage,
             )
         data = [c.as_dict() for c in chunks]
         emit("tool_result", {"tool": "rag", "count": len(data), "chunks": data})
@@ -280,7 +282,8 @@ async def rag_retrieve(state: AgentState, config: RunnableConfig) -> dict[str, A
                     "provider": None,
                     "credential_mode": "platform",
                     "node": "rag_retrieve",
-                }
+                },
+                *select_usage,
             ],
         }
     except Exception as e:  # noqa: BLE001 - tool failure: continue with remaining tools (PRD §9.6)
