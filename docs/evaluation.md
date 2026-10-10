@@ -76,6 +76,26 @@ A case can declare:
 Thresholds are enforced (the test fails) only when a real model is configured. A case that fails because
 the provider errored is retried, and it is reported as an error rather than counted as a wrong answer.
 
+## RAG eval (RAGAS)
+
+`tests/evals/test_rag_ragas.py` measures retrieval and answer quality on two large real PDFs: the Llama 2 paper
+(arXiv 2307.09288, 77 pages, many tables and charts) and the WVSU employee handbook (82 pages). The PDFs are
+downloaded on first run into the gitignored `tests/evals/rag_docs/`. `datasets/rag_pdfs.yaml` has 36
+hand-written questions with reference answers and the page that holds each answer (6 are table questions,
+2 are not answerable). They are ingested through the real pipeline into a KB in the demo org and answered
+by a RAG-only agent.
+
+```bash
+AGENTDESK_LIVE=1 RAG_EVAL_TAG=baseline uv run --group evals pytest tests/evals/test_rag_ragas.py -s
+```
+
+Metrics: RAGAS faithfulness, answer relevancy, context precision and recall (vs the reference), factual
+correctness (claim F1 vs the reference), plus page hit rate (a retrieved context covers the answer's page)
+and no-answer accuracy. The report is `reports/rag_<tag>.json`. Env: `RAG_EVAL_REINGEST=1` (re-ingest after a
+pipeline change), `RAG_EVAL_CASES=0,3,9` / `RAG_EVAL_LIMIT=n` (subset), `EVAL_JUDGE_MODEL` (judge
+model). Layout-aware parsing needs Linux packages, so run it in the evals container to exercise
+`hi_res`: the image installs poppler and tesseract, and `uv sync --extra layout` adds Unstructured's layout stack.
+
 ## Adding cases
 
 Add questions whose answers are unambiguous in the demo documents

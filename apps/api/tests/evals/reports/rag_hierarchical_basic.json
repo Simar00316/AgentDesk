@@ -1,0 +1,569 @@
+{
+ "tag": "hierarchical_basic",
+ "model": "azure/gpt-5.4-mini",
+ "judge_model": "azure/gpt-5.4-mini",
+ "embedding_model": "openai/BAAI/bge-base-en-v1.5",
+ "ingestion": {
+  "llama2_arxiv_2307.09288.pdf": {
+   "seconds": 847.0,
+   "elements": 1196,
+   "images": 40,
+   "chunks": 312,
+   "index": "hierarchical",
+   "units": 39,
+   "llm_calls": 79,
+   "llm_input_tokens": 161144,
+   "llm_output_tokens": 40703,
+   "llm_cost_usd": 0.304022,
+   "duration_ms": 846999
+  },
+  "wvsu_employee_handbook_2024.pdf": {
+   "seconds": 419.9,
+   "elements": 1111,
+   "images": 3,
+   "chunks": 182,
+   "index": "hierarchical",
+   "units": 27,
+   "llm_calls": 30,
+   "llm_input_tokens": 48836,
+   "llm_output_tokens": 19399,
+   "llm_cost_usd": 0.123922,
+   "duration_ms": 419914
+  }
+ },
+ "cases": 9,
+ "errors": 0,
+ "metrics": {
+  "faithfulness": 0.917,
+  "answer_relevancy": 0.837,
+  "context_precision": 0.942,
+  "context_recall": 0.75,
+  "factual_correctness": 0.544,
+  "page_hit_rate": 1.0,
+  "latency_p50_ms": 2441,
+  "retrieve_p50_ms": 1190,
+  "avg_contexts": 5.0,
+  "avg_cost_usd": 0.002
+ },
+ "no_answer_accuracy": 1.0,
+ "by_doc": {
+  "llama2": {
+   "faithfulness": 0.889,
+   "answer_relevancy": 0.795,
+   "context_precision": 0.922,
+   "context_recall": 0.667,
+   "factual_correctness": 0.47,
+   "page_hit_rate": 1.0,
+   "latency_p50_ms": 2377,
+   "retrieve_p50_ms": 1237,
+   "avg_contexts": 5.0,
+   "avg_cost_usd": 0.002
+  },
+  "wvsu": {
+   "faithfulness": 1.0,
+   "answer_relevancy": 0.962,
+   "context_precision": 1.0,
+   "context_recall": 1.0,
+   "factual_correctness": 0.765,
+   "page_hit_rate": 1.0,
+   "latency_p50_ms": 2489,
+   "retrieve_p50_ms": 1053,
+   "avg_contexts": 5.0,
+   "avg_cost_usd": 0.002
+  }
+ },
+ "tables": {
+  "faithfulness": 0.778,
+  "answer_relevancy": 0.633,
+  "context_precision": 0.844,
+  "context_recall": 0.333,
+  "factual_correctness": 0.3,
+  "page_hit_rate": 1.0,
+  "latency_p50_ms": 2280,
+  "retrieve_p50_ms": 1249,
+  "avg_contexts": 5.0,
+  "avg_cost_usd": 0.003
+ },
+ "run_at": "2026-10-10T19:24:23+00:00",
+ "results": [
+  {
+   "question": "How many tokens of data was Llama 2 pretrained on?",
+   "doc": "llama2",
+   "kind": "text",
+   "reference": "Llama 2 was pretrained on 2 trillion (2.0T) tokens of data.",
+   "answer": "Llama 2 was pretrained on **2 trillion tokens** of data [1][2][3].",
+   "contexts": [
+    "2.1 Pretraining Data\n\nOur training corpus includes a new mix of data from publicly available sources, which does not include data from Meta\u2019s products or services. We made an effort to remove data from certain sites known to contain a high volume of personal information about private individuals. We trained on 2 trillion tokens of data as this provides a good performance\u2013cost trade-off, up-sampling the most factual sources in an effort to increase knowledge and dampen hallucinations.\n\nWe performed a variety of pretraining data investigations so that users can better understand the potential capabilities and limitations of our models; results can be found in Section 4.1.",
+    "<table><tr><td/><td>Training Data</td><td>Params</td><td>Context Length</td><td>GQA</td><td>Tokens</td><td>LR</td></tr><tr><td rowspan=\"4\">LLAMA 1</td><td/><td>7B</td><td>2k</td><td/><td>1.0T</td><td>3.0 x 1074</td></tr><tr><td>See Touvron et al.</td><td>13B</td><td>2k</td><td/><td>1.0T</td><td>3.0 x 10-4</td></tr><tr><td>(2023)</td><td>33B</td><td>2k</td><td/><td>1.4T</td><td>1.5 x 10-4</td></tr><tr><td/><td>65B</td><td>2k</td><td/><td>1.4T</td><td>1.5 x 1074</td></tr><tr><td rowspan=\"4\">LLAMA 2</td><td rowspan=\"4\">A new mix of publicly available online data</td><td>7B</td><td>Ak</td><td/><td>2.0T</td><td>3.0 x 1074</td></tr><tr><td>13B</td><td>4k</td><td/><td>2.0T</td><td>3.0 x 10-4</td></tr><tr><td>34B</td><td>4k</td><td>V</td><td>2.0T</td><td>1.5 x 10-4</td></tr><tr><td>70B</td><td>4k</td><td>V</td><td>2.0T</td><td>1.5 x 10-4</td></tr></table>",
+    "Table 1: Llama 2 family of models. Token counts refer to pretraining data only. All models are trained with\n\na global batch-size of 4M tokens. Bigger models \u2014 34B and 70B \u2014 use Grouped-Query Attention (GQA) for improved inference scalability.\n\n[Chart: Training loss vs processed tokens for Llama 2 7B, 13B, 34B, and 70B] Line chart of Train PPL versus Processed Tokens (Billions) for four Llama-2 models: 7B (red), 13B (blue), 34B (green), and 70B (pink). All curves drop sharply early in training and then continue to decline gradually through 2T tokens, with the 70B model lowest and 7B highest throughout, indicating no clear saturation by the end of pretraining.\n\nFigure 5: Training Loss for Llama 2 models. We compare the training loss of the Llama 2 family of models. We observe that after pretraining on 2T Tokens, the models still did not show any sign of saturation.\n\nTokenizer. WeusethesametokenizerasLlama1; itemploysabytepairencoding(BPE)algorithm(Sennrich et al., 2016) using the implementation from SentencePiece (Kudo and Richardson, 2018). As with Llama 1, we split all numbers into individual digits and use bytes to decompose unknown UTF-8 characters. The total vocabulary size is 32k tokens.",
+    "2 Pretraining\n\nTocreatethenewfamilyof Llama2models, webeganwiththepretrainingapproachdescribedinTouvronetal. (2023), using an optimized auto-regressive transformer, but made several changes to improve performance. Specifically, we performed more robust data cleaning, updated our data mixes, trained on 40% more total tokens, doubled the context length, and used grouped-query attention (GQA) to improve inference scalability for our larger models. Table 1 compares the attributes of the new Llama 2 models with the Llama 1 models.",
+    "\u2022 Early reviewers of this paper, who helped us improve its quality, including Mike Lewis, Joelle Pineau, Laurens van der Maaten, Jason Weston, and Omer Levy.\n\nA.2 Additional Details for Pretraining\n\nA.2.1 Architecture Changes Compared to Llama 1\n\nContext Length. We expand the context window for Llama 2 from 2048 tokens to 4096 tokens. The longer context window enables models to process more information, which is particularly useful for supporting longer histories in chat applications, various summarization tasks, and understanding longer documents. Table 16 compares the performance of 2k and 4k context pretraining on long-context benchmarks. Both models are trained for 150B tokens, keeping the same architecture and hyperparameters as a baseline, varying only the context length. We observe improvement on SCROLLS (Shaham et al., 2022), where the average input length is 3.5k, and no performance degradation on SQUAD (Rajpurkar et al., 2018). Table 17 shows that the longer context model retains strong performance on various general-purpose tasks."
+   ],
+   "pages": [
+    [
+     5,
+     5
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     47,
+     47
+    ]
+   ],
+   "page_hit": true,
+   "declined": null,
+   "error": null,
+   "latency_ms": 2298,
+   "retrieve_ms": 1364,
+   "agent_cost_usd": 0.002151,
+   "cost_by_node": {
+    "generate_answer": 0.001495,
+    "rag_select": 0.000656,
+    "rag_retrieve": 0.0
+   },
+   "ragas": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.949,
+    "context_precision": 1.0,
+    "context_recall": 1.0,
+    "factual_correctness": 1.0
+   }
+  },
+  {
+   "question": "What peak learning rate was used to pretrain Llama 2 70B?",
+   "doc": "llama2",
+   "kind": "table",
+   "reference": "According to Table 1, Llama 2 70B (like 34B) was trained with a learning rate of 1.5 \u00d7 10^-4; the 7B and 13B models used 3.0 \u00d7 10^-4.",
+   "answer": "I couldn't find that in our HR documents. Please reach out to the HR team for help.",
+   "contexts": [
+    "2.2 Training Details\n\nWe adopt most of the pretraining setting and model architecture from Llama 1. We use the standard transformer architecture (Vaswani et al., 2017), apply pre-normalization using RMSNorm (Zhang and Sennrich, 2019), use the SwiGLU activation function (Shazeer, 2020), and rotary positional embeddings (RoPE, Su et al. 2022). The primary architectural differences from Llama 1 include increased context length and grouped-query attention (GQA). We detail in Appendix Section A.2.1 each of these differences with ablation experiments to demonstrate their importance.\n\nHyperparameters. We trained using the AdamW optimizer (Loshchilov and Hutter, 2017), with \u03b21 = 0.9,\u03b22 = 0.95,eps = 10\u22125. We use a cosine learning rate schedule, with warmup of 2000 steps, and decay final learning rate down to 10% of the peak learning rate. We use a weight decay of 0.1 and gradient clipping of 1.0. Figure 5 (a) shows the training loss for Llama 2 with these hyperparameters.\n\n5",
+    "<table><tr><td>2.1</td><td>Pretraining Data... 2...</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td>ee</td><td/><td/></tr><tr><td>2.2</td><td>Training Details... 2...</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td>ee</td><td/><td/></tr><tr><td>2.3.</td><td>LLAMA 2 Pretrained Model</td><td>Evaluation</td><td/><td/><td/><td/><td/><td/><td/><td/><td>00.00.</td><td/><td>..........0.0 eee</td><td>ee</td><td>ee</td></tr><tr><td colspan=\"16\">Fine-tuning</td></tr><tr><td>3.1</td><td>Supervised Fine-Tuning (SFT)...</td><td/><td/><td/><td>2...</td><td>2.20...</td><td>0.000000</td><td/><td/><td>02</td><td/><td>ee</td><td/><td/><td>ee</td></tr><tr><td>3.2</td><td>Reinforcement Learning with</td><td/><td>Human</td><td/><td/><td>Feedback</td><td>(RLHF)</td><td/><td/><td/><td/><td/><td>..................0..</td><td/><td/></tr><tr><td>3.3</td><td>System Message for Multi-Turn</td><td/><td/><td/><td>Consistency...</td><td/><td>2...</td><td/><td>2.</td><td/><td>ee</td><td/><td/><td>eee</td><td/></tr><tr><td>3.4</td><td>RLHFResults .... 2...</td><td>20...</td><td/><td>0</td><td/><td/><td/><td/><td/><td/><td/><td/><td>ee</td><td/><td/></tr><tr><td>Safety</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></tr><tr><td>4.1</td><td>SafetyinPretraining .....</td><td/><td>2...</td><td/><td>0...</td><td>2,</td><td/><td/><td/><td/><td/><td/><td>ee</td><td/><td/></tr><tr><td>4.2</td><td>Safety Fine-Tuning ...</td><td>2...</td><td/><td>2.</td><td/><td/><td/><td/><td/><td/><td/><td/><td>ee</td><td/><td/></tr><tr><td>4.3</td><td>RedTeaming.... 2...</td><td>2...</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td>ee</td></tr><tr><td>4.4</td><td>Safety Evaluation of LLAMA</td><td/><td>2-CHAT</td><td/><td>..</td><td/><td/><td/><td/><td/><td/><td/><td>ee</td><td/><td/></tr><tr><td colspan=\"16\">Discussion</td></tr><tr><td>5.1</td><td>Learnings and Observations...</td><td/><td/><td/><td>2...</td><td/><td/><td/><td/><td/><td/><td",
+    "2 Pretraining\n\nTocreatethenewfamilyof Llama2models, webeganwiththepretrainingapproachdescribedinTouvronetal. (2023), using an optimized auto-regressive transformer, but made several changes to improve performance. Specifically, we performed more robust data cleaning, updated our data mixes, trained on 40% more total tokens, doubled the context length, and used grouped-query attention (GQA) to improve inference scalability for our larger models. Table 1 compares the attributes of the new Llama 2 models with the Llama 1 models.",
+    "Table 1: Llama 2 family of models. Token counts refer to pretraining data only. All models are trained with\n\na global batch-size of 4M tokens. Bigger models \u2014 34B and 70B \u2014 use Grouped-Query Attention (GQA) for improved inference scalability.\n\n[Chart: Training loss vs processed tokens for Llama 2 7B, 13B, 34B, and 70B] Line chart of Train PPL versus Processed Tokens (Billions) for four Llama-2 models: 7B (red), 13B (blue), 34B (green), and 70B (pink). All curves drop sharply early in training and then continue to decline gradually through 2T tokens, with the 70B model lowest and 7B highest throughout, indicating no clear saturation by the end of pretraining.\n\nFigure 5: Training Loss for Llama 2 models. We compare the training loss of the Llama 2 family of models. We observe that after pretraining on 2T Tokens, the models still did not show any sign of saturation.\n\nTokenizer. WeusethesametokenizerasLlama1; itemploysabytepairencoding(BPE)algorithm(Sennrich et al., 2016) using the implementation from SentencePiece (Kudo and Richardson, 2018). As with Llama 1, we split all numbers into individual digits and use bytes to decompose unknown UTF-8 characters. The total vocabulary size is 32k tokens.",
+    "The remainder of this paper describes our pretraining methodology (Section 2), fine-tuning methodology (Section 3), approach to model safety (Section 4), key observations and insights (Section 5), relevant related work (Section 6), and conclusions (Section 7).\n\n\u00a7We are delaying the release of the 34B model due to a lack of time to sufficiently red team.\n\n\u00b6https://ai.meta.com/llama\n\n\u2016https://github.com/facebookresearch/llama\n\n4\n\n[Diagram: Training pipeline for Llama 2-Chat with pretraining, supervised fine-tuning, and RLHF] A flow diagram showing the Llama 2-Chat training process. It starts with pretraining data feeding self-supervised learning to produce Llama 2, then supervised fine-tuning creates Llama-2-chat, and a fine-tuning loop uses human preference data to train helpful and safety reward models, followed by rejection sampling and proximal policy optimization (RLHF)."
+   ],
+   "pages": [
+    [
+     5,
+     5
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     5,
+     5
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     4,
+     5
+    ]
+   ],
+   "page_hit": true,
+   "declined": null,
+   "error": null,
+   "latency_ms": 2243,
+   "retrieve_ms": 1281,
+   "agent_cost_usd": 0.002514,
+   "cost_by_node": {
+    "generate_answer": 0.001846,
+    "rag_select": 0.000668,
+    "rag_retrieve": 0.0
+   },
+   "ragas": {
+    "faithfulness": 0.333,
+    "answer_relevancy": 0.0,
+    "context_precision": 1.0,
+    "context_recall": 0.0,
+    "factual_correctness": 0.0
+   }
+  },
+  {
+   "question": "How many GPU hours did pretraining the 70B Llama 2 model take, and how much carbon did it emit?",
+   "doc": "llama2",
+   "kind": "table",
+   "reference": "Table 2 lists 1,720,320 GPU hours for Llama 2 70B with 291.42 tCO2eq emitted.",
+   "answer": "The 70B Llama 2 model\u2019s pretraining took **1,720,320 GPU hours** and emitted **291.42 tCO2zeq**. [1]",
+   "contexts": [
+    "<table><tr><td/><td/><td>Time (GPU hours)</td><td>Power Consumption (W)</td><td>Carbon Emitted (tCO2zeq)</td></tr><tr><td rowspan=\"4\">LLAMA 2</td><td>7B</td><td>184320</td><td>400</td><td>31.22</td></tr><tr><td>13B</td><td>368640</td><td>400</td><td>62.44</td></tr><tr><td>34B</td><td>1038336</td><td>350</td><td>153.90</td></tr><tr><td>70B</td><td>1720320</td><td>400</td><td>291.42</td></tr><tr><td>Total</td><td/><td>3311616</td><td/><td>539.00</td></tr></table>",
+    "<table><thead><tr><th>Model Developers</th><th>Meta AI</th></tr></thead><tr><td>Out-of-Scope Uses</td><td>Use in any manner that violates applicable laws or regulations (including trade compliance laws). Use in languages other than English. Use in any other way that is prohibited by the Acceptable Use Policy and Licensing Agreement for LLAMA 2.</td></tr><tr><td colspan=\"2\">Hardware and Software (Section 2.2)</td></tr><tr><td>Training Factors</td><td>We used custom training libraries, Meta\u2019s Research Super Cluster, and produc- tion clusters for pretraining. Fine-tuning, annotation, and evaluation were also performed on third-party cloud compute.</td></tr><tr><td>Carbon Footprint</td><td>Pretraining utilized a cumulative 3.3M GPU hours of computation on hardware of type A100-80GB (TDP of 350-400W). Estimated total emissions were 539 tCOzeq, 100% of which were offset by Meta\u2019s sustainability program.</td></tr><tr><td colspan=\"2\">Training Data (Sections 2.1 and 3)</td></tr><tr><td>Overview</td><td>LLAMA 2 was pretrained on 2 trillion tokens of data from publicly available sources. The fine-tuning data includes publicly available instruction datasets, as well as over one million new human-annotated examples. Neither the pretraining nor the fine-tuning datasets include Meta user data.</td></tr><tr><td>Data Freshness</td><td>The pretraining data has a cutoff of September 2022, but some tuning data is more recent, up to July 2023.</td></tr><tr><td colspan=\"2\">Evaluation Results</td></tr><tr><td colspan=\"2\">See evaluations for pretraining (Section 2); fine-tuning (Section 3); and safety (Section 4).</td></tr><tr><td/><td>Ethical Considerations and Limitations (Section 5.2)</td></tr></table>",
+    "Table 2 summarizes the carbon emission for pretraining the Llama 2 family of models. A cumulative of 3.3M GPU hours of computation was performed on hardware of type A100-80GB (TDP of 400W or 350W). We estimate the total emissions for training to be 539 tCO2eq, of which 100% were directly offset by Meta\u2019s sustainability program.\u2217\u2217 Our open release strategy also means that these pretraining costs will not need to be incurred by other companies, saving more global resources.",
+    "Table 2: CO2 emissions during pretraining. Time: total GPU time required for training each model. Power Consumption: peak power capacity per GPU device for the GPUs used adjusted for power usage efficiency. 100%oftheemissionsaredirectlyoffsetbyMeta\u2019ssustainabilityprogram, and becauseweareopenlyreleasing these models, the pretraining costs do not need to be incurred by others.\n\ncan scale almost as well as expensive Infiniband up to 2000 GPUs, which makes pretraining even more\n\ndemocratizable.\n\nCarbon Footprint of Pretraining. Following preceding research (Bender et al., 2021a; Patterson et al., 2021; Wu et al., 2022; Dodge et al., 2022) and using power consumption estimates of GPU devices and carbon efficiency, we aim to calculate the carbon emissions resulting from the pretraining of Llama 2 models. The actual power usage of a GPU is dependent on its utilization and is likely to vary from the Thermal Design Power (TDP) that we employ as an estimation for GPU power. It is important to note that our calculations do not account for further power demands, such as those from interconnect or non-GPU server power consumption, nor from datacenter cooling systems. Additionally, the carbon output related to the production of AI hardware, like GPUs, could add to the overall carbon footprint as suggested by Gupta et al. (2022b,a).",
+    "2.2.1 Training Hardware & Carbon Footprint\n\nTraining Hardware. We pretrained our models on Meta\u2019s Research Super Cluster (RSC) (Lee and Sengupta, 2022) as well as internal production clusters. Both clusters use NVIDIA A100s. There are two key differences between the two clusters, with the first being the type of interconnect available: RSC uses NVIDIA Quantum InfiniBand while our production cluster is equipped with a RoCE (RDMA over converged Ethernet) solution based on commodity ethernet Switches. Both of these solutions interconnect 200 Gbps end-points. The second difference is the per-GPU power consumption cap \u2014 RSC uses 400W while our production cluster uses 350W. With this two-cluster setup, we were able to compare the suitability of these different types of interconnect for large scale training. RoCE (which is a more affordable, commercial interconnect network)"
+   ],
+   "pages": [
+    [
+     7,
+     7
+    ],
+    [
+     77,
+     77
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     7,
+     7
+    ],
+    [
+     6,
+     6
+    ]
+   ],
+   "page_hit": true,
+   "declined": null,
+   "error": null,
+   "latency_ms": 2280,
+   "retrieve_ms": 1249,
+   "agent_cost_usd": 0.002257,
+   "cost_by_node": {
+    "generate_answer": 0.001604,
+    "rag_select": 0.000653,
+    "rag_retrieve": 0.0
+   },
+   "ragas": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.937,
+    "context_precision": 1.0,
+    "context_recall": 1.0,
+    "factual_correctness": 0.5
+   }
+  },
+  {
+   "question": "How many supervised fine-tuning annotations were collected for Llama 2-Chat?",
+   "doc": "llama2",
+   "kind": "text",
+   "reference": "They stopped annotating SFT data after collecting a total of 27,540 annotations.",
+   "answer": "Llama 2-Chat collected a total of **27,540 supervised fine-tuning annotations**. [1]",
+   "contexts": [
+    "Table 5: SFT annotation \u2014 example of a helpfulness (top) and safety (bottom) annotation for SFT, where the annotator has written both the prompt and its answer.\n\nGetting Started. To bootstrap, we started the SFT stage with publicly available instruction tuning data (Chung et al., 2022), as utilized previously in Touvron et al. (2023).\n\nQuality Is All You Need. Third-party SFT data is available from many different sources, but we found that many of these have insufficient diversity and quality \u2014 in particular for aligning LLMs towards dialogue-style instructions. As a result, we focused first on collecting several thousand examples of high-quality SFT data, as illustrated in Table 5. By setting aside millions of examples from third-party datasets and using fewer but higher-quality examples from our own vendor-based annotation efforts, our results notably improved. These findings are similar in spirit to Zhou et al. (2023), which also finds that a limited set of clean instruction-tuning data can be sufficient to reach a high level of quality. We found that SFT annotations in the order of tens of thousands was enough to achieve a high-quality result. We stopped annotating SFT after collecting a total of 27,540 annotations. Note that we do not include any Meta user data.",
+    "Table 4: Comparison to closed-source models on academic benchmarks. Results for GPT-3.5 and GPT-4\n\nare from OpenAI (2023). Results for the PaLM model are from Chowdhery et al. (2022). Results for the PaLM-2-L are from Anil et al. (2023).\n\n3 Fine-tuning\n\nLlama 2-Chat is the result of several months of research and iterative applications of alignment techniques,\n\nincluding both instruction tuning and RLHF, requiring significant computational and annotation resources.\n\nIn this section, we report on our experiments and findings using supervised fine-tuning (Section 3.1), as\n\nwell as initial and iterative reward modeling (Section 3.2.2) and RLHF (Section 3.2.3). We also share a new technique, Ghost Attention (GAtt), which we find helps control dialogue flow over multiple turns (Section 3.3). See Section 4.2 for safety evaluations on fine-tuned models.\n\n8",
+    "The remainder of this paper describes our pretraining methodology (Section 2), fine-tuning methodology (Section 3), approach to model safety (Section 4), key observations and insights (Section 5), relevant related work (Section 6), and conclusions (Section 7).\n\n\u00a7We are delaying the release of the 34B model due to a lack of time to sufficiently red team.\n\n\u00b6https://ai.meta.com/llama\n\n\u2016https://github.com/facebookresearch/llama\n\n4\n\n[Diagram: Training pipeline for Llama 2-Chat with pretraining, supervised fine-tuning, and RLHF] A flow diagram showing the Llama 2-Chat training process. It starts with pretraining data feeding self-supervised learning to produce Llama 2, then supervised fine-tuning creates Llama-2-chat, and a fine-tuning loop uses human preference data to train helpful and safety reward models, followed by rejection sampling and proximal policy optimization (RLHF).",
+    "We also observed that different annotation platforms and vendors can result in markedly different down- stream model performance, highlighting the importance of data checks even when using vendors to source annotations. To validate our data quality, we carefully examined a set of 180 examples, comparing the annota- tions provided by humans with the samples generated by the model through manual scrutiny. Surprisingly, we found that the outputs sampled from the resulting SFT model were often competitive with SFT data handwritten by human annotators, suggesting that we could reprioritize and devote more annotation effort to preference-based annotation for RLHF.\n\nFine-Tuning Details. For supervised fine-tuning, we use a cosine learning rate schedule with an initial learning rate of 2 \u00d7 10\u22125, a weight decay of 0.1, a batch size of 64, and a sequence length of 4096 tokens.\n\nFor the fine-tuning process, each sample consists of a prompt and an answer. To ensure the model sequence length is properly filled, we concatenate all the prompts and answers from the training set. A special token is utilized to separate the prompt and answer segments. We utilize an autoregressive objective and zero-out the loss on tokens from the user prompt, so as a result, we backpropagate only on answer tokens. Finally, we fine-tune the model for 2 epochs.",
+    "4.2.2 Safety Supervised Fine-Tuning\n\nIn accordance with the established guidelines from Section 4.2.1, we gather prompts and demonstrations of safe model responses from trained annotators, and use the data for supervised fine-tuning in the same manner as described in Section 3.1. An example can be found in Table 5.\n\nThe annotators are instructed to initially come up with prompts that they think could potentially induce the model to exhibit unsafe behavior, i.e., perform red teaming, as defined by the guidelines. Subsequently, annotators are tasked with crafting a safe and helpful response that the model should produce."
+   ],
+   "pages": [
+    [
+     9,
+     9
+    ],
+    [
+     8,
+     8
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     9,
+     9
+    ],
+    [
+     24,
+     24
+    ]
+   ],
+   "page_hit": true,
+   "declined": null,
+   "error": null,
+   "latency_ms": 2568,
+   "retrieve_ms": 1226,
+   "agent_cost_usd": 0.002006,
+   "cost_by_node": {
+    "generate_answer": 0.001391,
+    "rag_select": 0.000615,
+    "rag_retrieve": 0.0
+   },
+   "ragas": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.989,
+    "context_precision": 1.0,
+    "context_recall": 1.0,
+    "factual_correctness": 0.0
+   }
+  },
+  {
+   "question": "What PPO hyperparameters were used for RLHF?",
+   "doc": "llama2",
+   "kind": "text",
+   "reference": "AdamW (beta1 0.9, beta2 0.95, eps 1e-5), weight decay 0.1, gradient clipping 1.0, constant learning rate 1e-6, batch size 512, PPO clip threshold 0.2, mini-batch size 64, KL penalty beta 0.01 for 7B/13B and 0.005 for 34B/70B.",
+   "answer": "The PPO hyperparameters used for RLHF were:\n\n| Hyperparameter | Value |\n|---|---:|\n| Optimizer | AdamW |\n| \u03b21 | 0.9 |\n| \u03b22 | 0.95 |\n| eps | 1e-5 |\n| Weight decay | 0.1 |\n| Gradient clipping | 1.0 |\n| Learning rate | 1e-6 |\n| Batch size per PPO iteration | 512 |\n| PPO clip threshold | 0.2 |\n| Mini-batch size | 64 |\n| Gradient steps per mini-batch | 1 |\n\nThey also used different KL penalty values: \u03b2 = 0.01 for the 7B and 13B models, and \u03b2 = 0.005 for the 34B and 70B models. [1]",
+   "contexts": [
+    "For all models, we use the AdamW optimizer (Loshchilov and Hutter, 2017), with \u03b21 = 0.9,\u03b22 = 0.95,eps = 10\u22125. We use a weight decay of 0.1, gradient clipping of 1.0, and a constant learning rate of 10\u22126. For each PPO iteration we use a batch size of 512, a PPO clip threshold of 0.2, a mini-batch size of 64, and take one gradient step per mini-batch. For the 7B and 13B models, we set \u03b2 = 0.01 (KL penalty), and for the 34B and 70B models, we set \u03b2 = 0.005.\n\n15\n\n[Figure: Chat-style example of emoji-only responses in a messaging interface] A screenshot of a chat conversation titled \"Always answer with emojis\" showing a user asking \"Who are you?\" and the assistant replying with emojis. Below, another user message asks \"How to go from Paris to NY?\" and the assistant begins a longer text response in a blue chat bubble.\n\n[Diagram: Chat examples showing emoji-only responses to user questions] A conversational diagram with alternating user and assistant message bubbles. The user asks questions like \u201cWho are you?\u201d, \u201cHow to go from Paris to NY?\u201d, \u201cWhat caused the extinction of the dinosaurs?\u201d, and \u201cItaly?\u201d, while the assistant replies only with emojis, illustrating an instruction-following failure where the model answers in emoji form instead of text.",
+    "Figure 9: Issues with multi-turn memory (left) can be improved with GAtt (right).\n\nWe train for between 200 and 400 iterations for all our models, and use evaluations on held-out prompts for early stopping. Each iteration of PPO on the 70B model takes on average \u2248 330 seconds. To train quickly with large batch sizes, we use FSDP (Zhao et al., 2023). This was effective when using O(1) forward or backward passes, but caused a large slow down (\u2248 20\u00d7) during generation, even when using a large batch size and KV cache. We were able to mitigate this by consolidating the model weights to each node once before generation and then freeing the memory after generation, resuming the rest of the training loop.",
+    "3.2.3 Iterative Fine-Tuning\n\nAs we received more batches of human preference data annotation, we were able to train better reward models and collect more prompts. We therefore trained successive versions for RLHF models, referred to here as RLHF-V1, ..., RLHF-V5.\n\nWe explored RLHF fine-tuning with two main algorithms:\n\n\u2022 Proximal Policy Optimization (PPO) (Schulman et al., 2017), the standard in RLHF literature.\n\n\u2022 Rejection Sampling fine-tuning. We sample K outputs from the model and select the best candidate with our reward, consistent with Bai et al. (2022b). The same re-ranking strategy for LLMs was also proposed in Deng et al. (2019), where the reward is seen as an energy function. Here, we go one step further, and use the selected outputs for a gradient update. For each prompt, the sample obtaining\n\n[Chart: Max and median reward vs number of samples (N)] Line chart with x-axis labeled N Samples (log scale, from 1 to 100) and y-axis labeled Reward Score. Two series are shown: Max of the rewards rises steadily from about 0.54 at N=1 to about 0.67 at N=100, while Median of the rewards stays nearly flat around 0.54\u20130.55 across all sample counts.\n\nFigure 7: Max and median reward among N samples, N \u2208 [1,...,100] averaged over our training set of",
+    "4.2 Safety Fine-Tuning\n\nIn this section, we describe our approach to safety fine-tuning, including safety categories, annotation guidelines, and the techniques we use to mitigate safety risks. We employ a process similar to the general fine-tuning methods as described in Section 3, with some notable differences related to safety concerns. Specifically, we use the following techniques in safety fine-tuning:\n\n1. Supervised Safety Fine-Tuning: We initialize by gathering adversarial prompts and safe demonstra- tions that are then included in the general supervised fine-tuning process (Section 3.1). This teaches the model to align with our safety guidelines even before RLHF, and thus lays the foundation for high-quality human preference data annotation.\n\n2. Safety RLHF: Subsequently, we integrate safety in the general RLHF pipeline described in Sec- tion 3.2.2. This includes training a safety-specific reward model and gathering more challenging adversarial prompts for rejection sampling style fine-tuning and PPO optimization.",
+    "4.2.3 Safety RLHF\n\nWe observe early in the development of Llama 2-Chat that it is able to generalize from the safe demonstrations in supervised fine-tuning. The model quickly learns to write detailed safe responses, address safety concerns, explain why the topic might be sensitive, and provide additional helpful information. In particular, when the model outputs safe responses, they are often more detailed than what the average annotator writes. Therefore, after gathering only a few thousand supervised demonstrations, we switched entirely to RLHF to teach the model how to write more nuanced responses. Comprehensive tuning with RLHF has the added benefit that it may make the model more robust to jailbreak attempts (Bai et al., 2022a).\n\nWe conduct RLHF by first collecting human preference data for safety similar to Section 3.2.2: annotators write a prompt that they believe can elicit unsafe behavior, and then compare multiple model responses to the prompts, selecting the response that is safest according to a set of guidelines. We then use the human preference data to train a safety reward model (see Section 3.2.2), and also reuse the adversarial prompts to sample from the model during the RLHF stage."
+   ],
+   "pages": [
+    [
+     15,
+     16
+    ],
+    [
+     16,
+     16
+    ],
+    [
+     13,
+     14
+    ],
+    [
+     23,
+     23
+    ],
+    [
+     24,
+     24
+    ]
+   ],
+   "page_hit": true,
+   "declined": null,
+   "error": null,
+   "latency_ms": 2823,
+   "retrieve_ms": 1130,
+   "agent_cost_usd": 0.00281,
+   "cost_by_node": {
+    "generate_answer": 0.002171,
+    "rag_select": 0.000639,
+    "rag_retrieve": 0.0
+   },
+   "ragas": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.937,
+    "context_precision": 1.0,
+    "context_recall": 1.0,
+    "factual_correctness": 0.92
+   }
+  },
+  {
+   "question": "What TruthfulQA and ToxiGen scores did the pretrained Llama 2 70B model get?",
+   "doc": "llama2",
+   "kind": "table",
+   "reference": "In Table 11, pretrained Llama 2 70B scores 50.18 on TruthfulQA (truthful and informative) and 24.60 on ToxiGen (percentage of toxic generations).",
+   "answer": "The pretrained **Llama 2 70B** model scored:\n\n| Model | TruthfulQA | ToxiGen |\n|---|---:|---:|\n| Llama 2 70B (pretrained) | **50.18%** | **0.28** |\n\nThese values are shown in the automatic safety benchmark results table for pretrained models [1][2].",
+   "contexts": [
+    "<table><tr><td/><td/><td>% (true+info)</td><td>%true</td><td>% info</td></tr><tr><td colspan=\"5\">Pretrained</td></tr><tr><td>MPT</td><td>7B</td><td>29.13</td><td>36.72</td><td>92.04</td></tr><tr><td/><td>30B</td><td>35.25</td><td>40.27</td><td>94.74</td></tr><tr><td rowspan=\"2\">Falcon arco</td><td>7B</td><td>25.95</td><td>29.01</td><td>96.08</td></tr><tr><td>40B</td><td>40.39</td><td>44.80</td><td>95.23</td></tr><tr><td rowspan=\"4\">LLAMA 1</td><td>7B</td><td>27.42</td><td>32.31</td><td>94.86</td></tr><tr><td>13B</td><td>41.74</td><td>45.78</td><td>95.72</td></tr><tr><td>33B</td><td>44.19</td><td>48.71</td><td>95.23</td></tr><tr><td>65B</td><td>48.71</td><td>51.29</td><td>96.82</td></tr><tr><td rowspan=\"4\">LLAMA 2</td><td>7B</td><td>33.29</td><td>39.53</td><td>93.02</td></tr><tr><td>13B</td><td>41.86</td><td>45.65</td><td>96.08</td></tr><tr><td>34B</td><td>43.45</td><td>46.14</td><td>96.7</td></tr><tr><td>70B</td><td>50.18</td><td>53.37</td><td>96.21</td></tr><tr><td colspan=\"5\">Fine-tuned</td></tr><tr><td>ChatGPT</td><td/><td>78.46</td><td>79.92</td><td>98.53</td></tr><tr><td>MPT-instruct</td><td>7B</td><td>29.99</td><td>35.13</td><td>94.37</td></tr><tr><td>Falcon-instruct</td><td>7B</td><td>28.03</td><td>41.00</td><td>85.68</td></tr><tr><td rowspan=\"4\">Luama 2-CHAT</td><td>7B</td><td>57.04</td><td>60.59</td><td>96.45</td></tr><tr><td>13B</td><td>62.18</td><td>65.73</td><td>96.45</td></tr><tr><td>34B</td><td>67.2</td><td>70.01</td><td>97.06</td></tr><tr><td>70B</td><td>64.14</td><td>67.07</td><td>97.06</td></tr></table>",
+    "<table><tr><td>Pretrained</td><td/><td/><td/></tr><tr><td rowspan=\"2\">T MP</td><td>7B</td><td>0.30</td><td>0.43</td></tr><tr><td>30B</td><td>0.29</td><td>0.41</td></tr><tr><td rowspan=\"2\">Falcon</td><td>7B</td><td>0.21</td><td>0.33</td></tr><tr><td>40B</td><td>0.29</td><td>0.37</td></tr><tr><td rowspan=\"4\">LLAMA 1</td><td>7B</td><td>0.31</td><td>0.46</td></tr><tr><td>13B</td><td>0.29</td><td>0.43</td></tr><tr><td>33B</td><td>0.26</td><td>0.44</td></tr><tr><td>65B</td><td>0.30</td><td>0.44</td></tr><tr><td rowspan=\"4\">LLAMA 2</td><td>7B</td><td>0.29</td><td>0.42</td></tr><tr><td>13B</td><td>0.32</td><td>0.44</td></tr><tr><td>34B</td><td>0.25</td><td>0.45</td></tr><tr><td>70B</td><td>0.28</td><td>0.44</td></tr><tr><td colspan=\"4\">Fine-tuned</td></tr><tr><td>ChatGPT</td><td/><td>0.55</td><td>0.65</td></tr><tr><td>MPT-instruct</td><td>7B</td><td>0.31</td><td>0.38</td></tr><tr><td>Falcon-instruct</td><td>7B</td><td>0.32</td><td>0.36</td></tr><tr><td rowspan=\"4\">Luama 2-CHAT</td><td>7B</td><td>0.48</td><td>0.56</td></tr><tr><td>13B</td><td>0.46</td><td>0.53</td></tr><tr><td>34B</td><td>0.44</td><td>0.47</td></tr><tr><td>70B</td><td>0.44</td><td>0.49</td></tr></table>",
+    "<table><tr><td/><td/><td>TruthfulQA \u00a2</td><td>ToxiGen |</td></tr><tr><td/><td>7B</td><td>29.13</td><td>22.32</td></tr><tr><td>MPT</td><td>30B</td><td>35.25</td><td>22.61</td></tr><tr><td>Faleon</td><td>7B 40B</td><td>25.95</td><td>14.53 23.44</td></tr><tr><td/><td/><td>40.39</td><td/></tr><tr><td/><td>7B 13B</td><td>27.42 41.74</td><td>23.00 23.08</td></tr><tr><td/><td>33B 65B</td><td>44.19 48.71</td><td>22.57 21.77</td></tr><tr><td/><td>7B</td><td>33.29</td><td>21.25</td></tr><tr><td/><td>138</td><td>41.86</td><td>26.10</td></tr><tr><td>tama</td><td>34B</td><td>43.45</td><td>21.19</td></tr></table>",
+    "Table 11: Evaluation of pretrained LLMs on automatic safety benchmarks. For TruthfulQA, we present the percentage of generations that are both truthful and informative (the higher the better). For ToxiGen, we present the percentage of toxic generations (the smaller, the better).\n\nBenchmarks give a summary view of model capabilities and behaviors that allow us to understand general patterns in the model, but they do not provide a fully comprehensive view of the impact the model may have on people or real-world outcomes; that would require study of end-to-end product deployments. Further testing and mitigation should be done to understand bias and other social issues for the specific context in which a system may be deployed. For this, it may be necessary to test beyond the groups available in the BOLD dataset (race, religion, and gender). As LLMs are integrated and deployed, we look forward to continuing research that will amplify their potential for positive impact on these important social issues.",
+    "A.4.8 Automatic Safety Benchmark Evaluation Results\n\nFine-grained Analysis of Toxicity, Truthfulness, and Bias. Here we perform in-depth analyses to better understand the safety of model generations from the perspectives of toxicity, truthfulness, and bias.\n\n\u2022 Truthfulness. Table 44 presents evaluation results of TruthfulQA for the percentage of truthfulness, percentage of informativeness, and percentage of both truthfulness and informativeness across generations. Most of the models show a >90% informativeness in the model generations. However, the truthfulness percentage is relatively low for pretrained models, around 30% to 40% for Falcon, MPT, and the 7B Llama 1. This percentage increases for pretrained Llama 1 and Llama 2 with a larger size. After instruction fine-tuning, both 7B and 13B Llama 2-Chat improved about 20% in truthfulness, 30B Llama 2-Chat improved about 24%, and 70B Llama 2-Chat improved about 14% compared to their pretrained versions.\n\n\u2022 Toxicity. Table 45 shows that Mexicans, Latinos, and women tend to be the top three demographic groups with the highest percentages of toxic generations given ToxiGen prompts for the pretrained models. Thanks to instruction fine-tuning, fine-tuned Llama 2-Chat models of all sizes show an effectively zero percentage of toxic model generations, and hence their results are not presented here."
+   ],
+   "pages": [
+    [
+     70,
+     70
+    ],
+    [
+     72,
+     72
+    ],
+    [
+     23,
+     23
+    ],
+    [
+     23,
+     23
+    ],
+    [
+     69,
+     69
+    ]
+   ],
+   "page_hit": true,
+   "declined": null,
+   "error": null,
+   "latency_ms": 2457,
+   "retrieve_ms": 1154,
+   "agent_cost_usd": 0.003205,
+   "cost_by_node": {
+    "generate_answer": 0.002521,
+    "rag_select": 0.000684,
+    "rag_retrieve": 0.0
+   },
+   "ragas": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.961,
+    "context_precision": 0.533,
+    "context_recall": 0.0,
+    "factual_correctness": 0.4
+   }
+  },
+  {
+   "question": "How many days of annual leave does a classified employee with 7 years of service earn?",
+   "doc": "wvsu",
+   "kind": "text",
+   "reference": "Five to 10 years of service (61-120 months) earns 1.50 days per month, which is 18 days per year.",
+   "answer": "A classified employee with 7 years of service earns **18 days of annual leave per year** (1.50 days per month), since that falls in the **five\u201310 years of service** range. [1]",
+   "contexts": [
+    "LEAVE POLICIES\n\nLeave policies for employees of state-related institutions of higher education are set forth in the Higher Education Policy Commission, Series 38 at this link: HEPC Series 38 or the Board of Governor\u2019s Policy #18.\n\nThe policies read:\n\nA) Major Administrators, Non-classified and Faculty with 12-month contracts shall be eligible for 24 days of leave per year, calculated at the rate of 2.00 days per month from the date of employment.\n\nB) All other full-time, regular employees in classified positions shall be eligible for annual leave with pay on the following basis:\n\n1) Less than five years of service (60 months): 1.25 days per month (I5 days per year);\n\n2) Five-10 years of service (61-120 months): 1.50 days per month (18 days per year);\n\n3) 10-15 years of service (121-180 months): 1.75 days per month (21 days per year);\n\n15 or more years of service: 2.00 days per month (24 days per year).\n\nLength of service shall be total years of service which includes experience with state institutions of higher education and other state agencies. Continuous service is not required to complete the required term. Annual appointment periods of nine (9) months or more shall be credited for one (1) year of service for annual leave calculation purposes.",
+    "Other Conditions\n\nA) At the request of the employee through established procedures, annual leave may be granted because of illness.\n\nB) Calculation of annual leave shall be based on years of service under the Higher Education Policy Commission, Series 38, Section 3.5 HEPC Series 38 .\n\nC) The work requirements of the institution shall take priority over the scheduling of annual leave or other leave for an employee. When operationally possible, the supervisor shall grant earned annual leave at the convenience of the employee. However, departmental needs must be met, and annual leave may not be taken without prior request and approval of the employee's supervisor.\n\nD) In the event of an employee's death, accumulated annual leave will be paid to the employee's estate.",
+    "C)\n\nEmployees working between 1,040 hours and less than 1,950 on a regular and continuing basis during a twelve (12) consecutive month period shall accumulate leave on a pro rata basis.\n\nD)\n\nE) Employees working less than 1,040 hours are not eligible for leave benefits.\n\nF) An institutional holiday occurring during an employee's leave period shall not be considered as a day of leave.\n\nG) Accumulated annual leave for continuing employees may be extended beyond that earned during a period of one year by written approval of the President, or his/her designee, but in no case shall it exceed twice the amount earned in any 12- month period.\n\n28\n\nH) An employee is entitled to accumulated annual leave at termination of service, but in no case may this exceed the limits established above. Leave time may not be earned during a terminal leave period.\n\nI) Annual and sick leave may not be taken before it is accrued. If an employee works less than a full month, annual and sick leave shall be accumulated on a pro rata basis.",
+    "G) In cases where all accumulated sick leave has been used and annual leave is available, it shall be the option of an employee to: 1) use any accumulated annual leave until it has expired rather than being removed from the payroll; or 2) to be taken off the payroll immediately after the accumulated sick leave has expired and retain the accumulated annual leave for use after he/she returns to work.\n\nH) On-the-job injuries or occupational illnesses which involve no more than three (3) days of disability leave or absence from work shall not be charged against the employee's accumulated sick leave as long as they are the next three (3) consecutive working days after the injury or illness occurred. If on-the-job injuries or illnesses require a leave beyond the three-day period, the employee may have the option of either of the following: 1) use earned and accumulated sick and annual leave until both are exhausted. 2) reserving for future use any earned and accumulated sick and annual leave and receiving only Workers\u2019 Compensation benefits for which the employee is judged eligible.",
+    "Leave Records\n\nA complete leave record and file is maintained for each employee. This record shall disclose at all times accrued leave as well as leave that has been used.\n\nIt is the responsibility of each staff member to accurately enter their leave record in the leave system at the time of occurrence. In addition, the leave system and employee\u2019s time sheet must agree. It is the supervisor\u2019s responsibility to ensure accuracy of the time sheet and leave system and to approve each employee\u2019s leave in the appropriate time-frame. Inaccurate posting of the leave system may be perceived as falsifying official University records and could be subject to disciplinary action up to and including termination."
+   ],
+   "pages": [
+    [
+     28,
+     28
+    ],
+    [
+     29,
+     29
+    ],
+    [
+     28,
+     29
+    ],
+    [
+     31,
+     31
+    ],
+    [
+     29,
+     29
+    ]
+   ],
+   "page_hit": true,
+   "declined": null,
+   "error": null,
+   "latency_ms": 2425,
+   "retrieve_ms": 1134,
+   "agent_cost_usd": 0.001973,
+   "cost_by_node": {
+    "generate_answer": 0.001399,
+    "rag_select": 0.000574,
+    "rag_retrieve": 0.0
+   },
+   "ragas": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.988,
+    "context_precision": 1.0,
+    "context_recall": 1.0,
+    "factual_correctness": 0.86
+   }
+  },
+  {
+   "question": "How much basic life insurance do employees get and who pays for it?",
+   "doc": "wvsu",
+   "kind": "text",
+   "reference": "Term life insurance of $10,000, with the premium paid by the University.",
+   "answer": "Employees receive **$10,000** in basic term life insurance, and **the University pays the premium on the employee\u2019s behalf**. [1]",
+   "contexts": [
+    "Basic Life Insurance\n\nTerm life insurance in the amount of $10,000. The premium is paid by the University on your behalf.\n\nOptional Life Insurance\n\nGroup term life insurance is available to all employees enrolled for health insurance and/or the basic life insurance plan. There is a wide range of coverage from which to choose. You alone are responsible for paying the entire monthly premium. The premium for up to $40,000 coverage may be sheltered from federal, state and Social Security taxes.",
+    "Workplace Safety\n\nParking\n\nInclement & Emergency Closure\n\nAlcoholic Beverages and Drugs\n\nDepartment of Public Safety\n\nEmergency Response Plan\n\nEarly Warning Alert\n\nShelter-In-Place\n\nHazard Communication (Right-To-Know) Policy\n\nHazardous Waste\n\nDrug-Free Workplace Policy/Procedures\n\nDrug-Free Campuses and Communities Act\n\nSmoking\n\nDisciplinary Procedure\n\nConduct and Disciplinary Action\n\nProgressive Discipline\n\nGrievance Procedure\n\nPayroll\n\nPay Checks\n\nDirect Deposit\n\nSalary Deductions\n\nMandatory Deductions\n\nFederal and State Tax Withholding\n\nSocial Security (FICA and Medicare)\n\nRetirement\n\nBenefits\n\nMedical Insurance\n\nBasic Life Insurance\n\nOptional Life Insurance\n\nDependent Life Insurance\n\nLong Term Total Disability Insurance\n\nMountaineer Flexible Benefits\n\nOther Optional Deductions/Benefits\n\nEmployee Assistance Resource Service (EARS)\n\n6\n\n47\n\n48\n\n48\n\n49",
+    "Dependent Life Insurance\n\nAn employee may elect to enroll for dependent life insurance which insures a spouse and/or each eligible child. There are four levels of coverage; you alone are responsible for paying the entire monthly premium.\n\nLong Term Total Disability Insurance\n\nAn employee is eligible to enroll in the standard disability plan which becomes effective the month following their employment date. This plan covers 60 percent of the employee's gross\n\n47\n\nsalary and contributes 12 percent of the gross salary to a retirement plan. You alone pay the premium. Read carefully the materials you received from the Payroll Office.",
+    "Mountaineer Flexible Benefits\n\nDental, Optical and Disability insurances; flexible spending accounts; and a group legal plan are available to employees through the Mountaineer Flexible Benefits plan. Premiums for these plans, with the exception of the legal plan, are pretax dollars. Changes in the plans offered may be made during the open enrollment period for each plan year unless there is a qualifying event such as: marriage, divorce, new child or dependent, death of spouse or dependent, etc. Contact the Benefits Department 304-766-3152 should you have any questions.",
+    "Exit Interview\n\nThe separating employee shall contact the Human Resources Department as soon as notice is given to schedule an exit interview. The interview will be on the employee\u2019s last day of work or another day, as mutually agreed on.\n\nThe exit interview is designed to identify data, suggestions and recommendations to help WVSU improve the workplace environment.\n\nAccrued annual leave will be paid in the final paycheck.\n\nHealth insurance terminates the last day of the month of employment. Information for Consolidated Omnibus Budget Reconciliation (COBRA) continued health coverage will be\n\n19\n\nprovided. Employees will be required to pay their share of the insurance premiums through the end of the month."
+   ],
+   "pages": [
+    [
+     47,
+     47
+    ],
+    [
+     6,
+     6
+    ],
+    [
+     47,
+     48
+    ],
+    [
+     48,
+     48
+    ],
+    [
+     19,
+     20
+    ]
+   ],
+   "page_hit": true,
+   "declined": null,
+   "error": null,
+   "latency_ms": 2554,
+   "retrieve_ms": 972,
+   "agent_cost_usd": 0.001613,
+   "cost_by_node": {
+    "generate_answer": 0.001066,
+    "rag_select": 0.000547,
+    "rag_retrieve": 0.0
+   },
+   "ragas": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.936,
+    "context_precision": 1.0,
+    "context_recall": 1.0,
+    "factual_correctness": 0.67
+   }
+  },
+  {
+   "question": "How much does an employee parking permit cost at WVSU?",
+   "doc": "wvsu",
+   "kind": "text",
+   "reference": "The handbook says employees must buy parking permit decals from the Department of Public Safety but does not state the price.",
+   "answer": "I couldn't find that in our HR documents. Please reach out to the HR team for help.",
+   "contexts": [
+    "3.3 Visitors shall have arrangements made in advance with the institutional sponsor, or through the Public Safety Office window in Wallace Hall, to obtain a temporary permit for parking while visiting the campus; 3.4 All motor vehicles belonging to and operated by students, faculty, staff or visitors shall be registered with the Department of Public Safety; 3.4.1 Vehicle registration for students, faculty and staff occurs during the fall, spring and summer academic registration periods; 3.4.1.1 The cost of parking permits is determined during the Spring Semester for the next full academic year beginning with the Fall Semester; 3.4.2 Vehicles remaining unregistered after two weeks into each of the three academic sessions may be ticketed, booted, or towed from the campus at the owners expense. 3.5 Campus parking lots may not be used for storage of vehicles for students,\n\nfaculty, or staff;\n\n3.5.1 Any vehicle which is not in use, is left on a campus street or parking lot, and whose owner cannot be located, may be ticketed, booted, or towed\n\nfrom the campus at the owners expense;\n\n3.5.1.1 Arrangements in this regard can be made with the Department of Public Safety for students, faculty and staff involved in institutional supported activities which require leaving their personal 3.6 Parking spaces are color coded in in the following manner:",
+    "Cole Complex \u2013 Room 112\n\nNursing x5117\n\nx3111\n\n34\n\nWORKPLACE SAFETY\n\nParking\n\nYou may purchase your I.D. Card and/or Parking Permit from the administrative office of the Department of Public Safety. This office is located on the first floor of Ferrell Hall.\n\nThe Department of Public Safety also has an office in the Howard House which is near the parking lot across the street from Ferrell Hall. Should you have visitors coming to the Campus, please have them park in the Visitor's Lot by Wallace Hall and request a Guest Permit.\n\nThe Department of Public Safety may be reached at 766-3353 or 766-3181.\n\nIf you plan to work beyond the hours the buildings are open, please notify the Public Safety Department by dialing 3181.\n\nEmployees of West Virginia State are required to purchase Parking Permit Decals if they plan to park their cars on Campus. The University's parking regulations are enforced by Campus Police Officers. Failure to purchase a parking permit or to abide by the parking and traffic regulations can result in tickets and/or towing. Parking permits may be purchased from the Department of Public Safety Office located on the first floor of Ferrell Hall.\n\nParking areas are marked as follows:\n\nRed Faculty/Staff White Student/Faculty/Staff Blue Handicapped Green Visitor\u2019s Lot and 15 minute zones Yellow Service Vehicles Only",
+    "Section 3. Regulations\n\n3.1 All employees and students of WVSU are required to purchase Parking Permit decals if they plan to park their cars on campus.\n\n3.1.1 Parking decals may be purchased at the Cashier's Office and picked up from the Department of Public Safety \u201ccustomer window\u201d located on the first floor of Wallace Hall;\n\n3.1.1.1 Parking decal fees are not refundable;\n\n3.1.1.2 The purchase of a parking permit decal does not insure the\n\navailability of a parking space, but grants the privilege of parking in\n\nappropriate areas when space is available.\n\n3.1.2 Similar types of parking permits should be placed in similar locations on the vehicle;\n\n68\n\n3.1.2.1 Students\u2019 parking permits should be placed on the inside lower right-hand corner of the passenger front windshield;\n\n3.1.2.2 Employees\u2019 parking permits should be hung from the rearview mirror\n\nsupport;\n\n3.1.2.3 Retirees\u2019 parking permits should be stuck onto the left rear bumper; 3.1.3 Parking decals may not be transferred from one vehicle or person to another vehicle or person;\n\n3.1.4 Failure to purchase a parking permit or to abide by the other aspects of the parking and traffic regulations can result in tickets, booting and/or towing. 3.2 All vehicles parked on the campus of WVSU shall display a current official parking permit granting such privilege;",
+    "Section 2. Applicability\n\n2.1 These regulations apply to all parking lots and areas of West Virginia State University as well as to the nearby surrounding community areas used for parking by the constituents of WVSU;\n\n2.2 This policy applies to all students, faculty, staff and visitors of the institution; 2.2.1 Arrangements are generally made by campus organizations in conjunction with the Department of Public Safety so the applicable regulations are simplified or in part eliminated when applied to planned visitors to the campus.",
+    "Red Faculty/Staff\n\nThe internal portion of the Campus is closed to vehicular traffic. Center bollards (poles/pegs) are removable for response to emergency situations. Additional information available at this link: BOG Policy #38 .\n\nInclement Weather and Emergency Closure\n\nWork time lost by any employee during a declared emergency will be considered regular work time for pay purposes and will not require that the time be charged to annual leave nor will there be a requirement the time be made up.\n\nAbsences from work due to weather conditions other than a declared emergency must be charged against accumulated annual leave, accumulated compensatory time, or the employee must be removed from the payroll for the time in question. Use this link to access the policy: BOG Policy #18 .\n\n35"
+   ],
+   "pages": [
+    [
+     69,
+     69
+    ],
+    [
+     34,
+     35
+    ],
+    [
+     68,
+     69
+    ],
+    [
+     68,
+     68
+    ],
+    [
+     35,
+     35
+    ]
+   ],
+   "page_hit": null,
+   "declined": true,
+   "error": null,
+   "latency_ms": 2319,
+   "retrieve_ms": 958,
+   "agent_cost_usd": 0.001922,
+   "cost_by_node": {
+    "generate_answer": 0.001379,
+    "rag_select": 0.000543,
+    "rag_retrieve": 0.0
+   }
+  }
+ ]
+}
